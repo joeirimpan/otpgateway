@@ -150,3 +150,5 @@ func (e *emailer) MaxOTPLen() int {
 func (e *emailer) MaxBodyLen() int {
 	return maxBodyLen
 }
+
+var _ otpgateway.Provider = (*emailer)(nil)

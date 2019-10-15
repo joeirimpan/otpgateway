@@ -20,7 +20,7 @@ const (
 	maxAddresslen = 10
 	maxOTPlen     = 6
 	apiURL        = "https://api-alerts.kaleyra.com/v4/"
-	StatusOK      = "OK"
+	statusOK      = "OK"
 )
 
 var reNum = regexp.MustCompile(`\+?([0-9]){8,15}`)
@@ -146,7 +146,7 @@ func (s *sms) Push(otp otpgateway.OTP, subject string, body []byte) error {
 	if err := json.Unmarshal(b, &r); err != nil {
 		return err
 	}
-	if r.Status != StatusOK {
+	if r.Status != statusOK {
 		return errors.New(r.Message)
 	}
 	return nil
@@ -166,3 +166,5 @@ func (s *sms) MaxOTPLen() int {
 func (s *sms) MaxBodyLen() int {
 	return 140
 }
+
+var _ otpgateway.Provider = (*sms)(nil)

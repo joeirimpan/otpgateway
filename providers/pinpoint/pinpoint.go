@@ -174,3 +174,5 @@ func sanitizePhone(phone string) string {
 		return phone
 	}
 }
+
+var _ otpgateway.Provider = (*sms)(nil)
