@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/jordan-wright/email"
-	"github.com/knadh/otpgateway"
 )
 
 const (
@@ -34,6 +33,10 @@ type cfg struct {
 	FromEmail    string `json:"FromEmail"`
 	SendTimeout  int    `json:"SendTimeout"`
 	MaxConns     int    `json:"MaxConns"`
+}
+
+type pushCfg struct {
+	To string `json:"to"`
 }
 
 type emailer struct {
@@ -127,10 +130,14 @@ func (e *emailer) ValidateAddress(to string) error {
 }
 
 // Push pushes an e-mail to the SMTP server.
-func (e *emailer) Push(otp otpgateway.OTP, subject string, m []byte) error {
+func (e *emailer) Push(pCfg []byte, subject string, m []byte) error {
+	var c *pushCfg
+	if err := json.Unmarshal(pCfg, &c); err != nil {
+		return err
+	}
 	return e.mailer.Send(&email.Email{
 		From:    e.cfg.FromEmail,
-		To:      []string{otp.To},
+		To:      []string{c.To},
 		Subject: subject,
 		HTML:    m,
 	}, e.timeout)
@@ -150,5 +157,3 @@ func (e *emailer) MaxOTPLen() int {
 func (e *emailer) MaxBodyLen() int {
 	return maxBodyLen
 }
-
-var _ otpgateway.Provider = (*emailer)(nil)

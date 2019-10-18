@@ -9,8 +9,6 @@ import (
 	"net/url"
 	"regexp"
 	"time"
-
-	"github.com/knadh/otpgateway"
 )
 
 const (
@@ -37,6 +35,10 @@ type cfg struct {
 	Sender       string `json:"Sender"`
 	Timeout      int    `json:"Timeout"`
 	MaxIdleConns int    `json:"MaxIdleConns"`
+}
+
+type pushCfg struct {
+	To string `json:"to"`
 }
 
 // solSMSAPIResp represents the response from solsms API.
@@ -120,12 +122,18 @@ func (s *sms) ValidateAddress(to string) error {
 }
 
 // Push pushes out an SMS.
-func (s *sms) Push(otp otpgateway.OTP, subject string, body []byte) error {
-	p := url.Values{}
+func (s *sms) Push(pCfg []byte, subject string, body []byte) error {
+	var (
+		p = url.Values{}
+		c *pushCfg
+	)
+	if err := json.Unmarshal(pCfg, &c); err != nil {
+		return err
+	}
 	p.Set("method", "sms")
 	p.Set("api_key", s.cfg.APIKey)
 	p.Set("sender", s.cfg.Sender)
-	p.Set("to", otp.To)
+	p.Set("to", c.To)
 	p.Set("message", string(body))
 
 	// Make the request.
@@ -166,5 +174,3 @@ func (s *sms) MaxOTPLen() int {
 func (s *sms) MaxBodyLen() int {
 	return 140
 }
-
-var _ otpgateway.Provider = (*sms)(nil)

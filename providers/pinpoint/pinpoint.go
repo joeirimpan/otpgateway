@@ -11,7 +11,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/pinpoint"
-	"github.com/knadh/otpgateway"
 )
 
 const (
@@ -41,6 +40,10 @@ type cfg struct {
 	AWSRegion    string `json:"AWSRegion"`
 	MessageType  string `json:"MessageType"`
 	SenderID     string `json:"SenderID"`
+}
+
+type pushCfg struct {
+	To string `json:"to"`
 }
 
 // New returns an instance of the SMS package. cfg is configuration
@@ -121,14 +124,20 @@ func (s *sms) ValidateAddress(to string) error {
 }
 
 // Push pushes out an SMS.
-func (s *sms) Push(otp otpgateway.OTP, subject string, body []byte) error {
-	var msg = string(body)
+func (s *sms) Push(pCfg []byte, subject string, body []byte) error {
+	var (
+		msg = string(body)
+		c   *pushCfg
+	)
+	if err := json.Unmarshal(pCfg, &c); err != nil {
+		return err
+	}
 
 	payload := &pinpoint.SendMessagesInput{
 		ApplicationId: &s.cfg.AppID,
 		MessageRequest: &pinpoint.MessageRequest{
 			Addresses: map[string]*pinpoint.AddressConfiguration{
-				sanitizePhone(otp.To): &pinpoint.AddressConfiguration{
+				sanitizePhone(c.To): &pinpoint.AddressConfiguration{
 					ChannelType: &channelType,
 				},
 			},
@@ -174,5 +183,3 @@ func sanitizePhone(phone string) string {
 		return phone
 	}
 }
-
-var _ otpgateway.Provider = (*sms)(nil)
