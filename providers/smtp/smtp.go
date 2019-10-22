@@ -8,8 +8,8 @@ import (
 	"regexp"
 	"time"
 
+	"github.com/joeirimpan/otpgateway/models"
 	"github.com/jordan-wright/email"
-	"github.com/knadh/otpgateway/models"
 )
 
 const (

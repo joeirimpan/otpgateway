@@ -17,7 +17,7 @@ import (
 
 	"github.com/alicebob/miniredis"
 	"github.com/go-chi/chi"
-	"github.com/knadh/otpgateway"
+	"github.com/joeirimpan/otpgateway"
 	"github.com/stretchr/testify/assert"
 )
 

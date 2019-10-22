@@ -17,8 +17,8 @@ import (
 	"github.com/knadh/koanf/providers/posflag"
 
 	"github.com/go-chi/chi"
+	"github.com/joeirimpan/otpgateway"
 	"github.com/knadh/koanf"
-	"github.com/knadh/otpgateway"
 	"github.com/knadh/stuffbin"
 	flag "github.com/spf13/pflag"
 )

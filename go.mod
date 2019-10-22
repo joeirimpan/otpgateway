@@ -1,4 +1,4 @@
-module github.com/knadh/otpgateway
+module github.com/joeirimpan/otpgateway
 
 go 1.12
 
@@ -13,6 +13,6 @@ require (
 	github.com/knadh/stuffbin v1.0.0
 	github.com/spf13/pflag v1.0.3
 	github.com/stretchr/testify v1.3.0
-	github.com/yuin/gopher-lua v0.0.0-20190125051437-7b9317363aa9 // indirect
+	github.com/yuin/gopher-lua v0.0.0-20190514113301-1cd887cd7036 // indirect
 	golang.org/x/net v0.0.0-20190909003024-a7b16738d86b // indirect
 )

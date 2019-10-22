@@ -12,8 +12,8 @@ import (
 	"strings"
 
 	"github.com/go-chi/chi"
-	"github.com/knadh/otpgateway"
-	"github.com/knadh/otpgateway/models"
+	"github.com/joeirimpan/otpgateway"
+	"github.com/joeirimpan/otpgateway/models"
 )
 
 const (
