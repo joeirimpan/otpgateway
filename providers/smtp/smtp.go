@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/jordan-wright/email"
+	"github.com/knadh/otpgateway/models"
 )
 
 const (
@@ -33,10 +34,6 @@ type cfg struct {
 	FromEmail    string `json:"FromEmail"`
 	SendTimeout  int    `json:"SendTimeout"`
 	MaxConns     int    `json:"MaxConns"`
-}
-
-type pushCfg struct {
-	To string `json:"to"`
 }
 
 type emailer struct {
@@ -130,14 +127,10 @@ func (e *emailer) ValidateAddress(to string) error {
 }
 
 // Push pushes an e-mail to the SMTP server.
-func (e *emailer) Push(pCfg []byte, subject string, m []byte) error {
-	var c *pushCfg
-	if err := json.Unmarshal(pCfg, &c); err != nil {
-		return err
-	}
+func (e *emailer) Push(otp models.OTP, subject string, m []byte) error {
 	return e.mailer.Send(&email.Email{
 		From:    e.cfg.FromEmail,
-		To:      []string{c.To},
+		To:      []string{otp.To},
 		Subject: subject,
 		HTML:    m,
 	}, e.timeout)
